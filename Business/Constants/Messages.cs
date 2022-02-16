@@ -51,5 +51,9 @@ namespace Business.Constants
         public static string UserRegistered = "Kullanıcı başarıyla kaydedildi";
         public static string AccessTokenCreated = "Access token başarıyla oluşturuldu";
 
+        public static string CreditCardAdded = "Kredi kartı eklendi";
+        public static string CardAlreadyExist = "Kredi kartı zaten mevcut";
+        public static string CreditCardNotFound = "Kredi kartı bulunamadı";
+
     }
 }

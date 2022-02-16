@@ -36,15 +36,5 @@ namespace ConsoleUI
                 Console.WriteLine("*****************");
             }
         }
-
-        private static void CarTest()
-        {
-            CarManager carManager = new CarManager(new EfCarDal());
-            var result = carManager.GetCarList();
-            foreach (var car in result.Data)
-            {
-                Console.WriteLine(car.CarDescription + "\n" + car.BrandName + "\n" + car.ColorName + "\n" + car.DailyPrice);
-            }
-        }
     }
 }

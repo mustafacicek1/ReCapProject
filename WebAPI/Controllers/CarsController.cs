@@ -19,17 +19,17 @@ namespace WebAPI.Controllers
         {
             _carService = carService;
         }
-        [HttpGet("getcarlist")]
+        [HttpGet("getall")]
         public IActionResult GetCarList()
         {
-            var result = _carService.GetCarList();
+            var result = _carService.GetAll();
             if (result.Success)
             {
                 return Ok(result);
             }
             return BadRequest(result);
         }
-        [HttpGet("getcardetailbyid")]
+        [HttpGet("getdetailbyid")]
         public IActionResult GetCarDetailById(int id)
         {
             var result = _carService.GetCarDetailById(id);
@@ -39,30 +39,30 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
-        [HttpGet("getcarsbybrandname")]
-        public IActionResult GetCarsByBrandName(string brandName)
+        [HttpGet("getbybrandid")]
+        public IActionResult GetByBrandId(int brandId)
         {
-            var result = _carService.GetCarsByBrandName(brandName);
+            var result = _carService.GetCarsByBrandId(brandId);
             if (result.Success)
             {
                 return Ok(result);
             }
             return BadRequest(result);
         }
-        [HttpGet("getcarsbycolorname")]
-        public IActionResult GetCarsByColorId(string colorName)
+        [HttpGet("getbycolorid")]
+        public IActionResult GetByColorId(int colorId)
         {
-            var result = _carService.GetCarsByColorName(colorName);
+            var result = _carService.GetCarsByColorId(colorId);
             if (result.Success)
             {
                 return Ok(result);
             }
             return BadRequest(result);
         }
-        [HttpGet("getcarsbydailyprice")]
-        public IActionResult GetCarsByDailyPrice(decimal min,decimal max)
+        [HttpGet("getfilteredlist")]
+        public IActionResult GetFilteredList(int brandId,int colorId)
         {
-            var result = _carService.GetCarsByDailyPrice(min,max);
+            var result = _carService.FilteredCarList(brandId,colorId);
             if (result.Success)
             {
                 return Ok(result);

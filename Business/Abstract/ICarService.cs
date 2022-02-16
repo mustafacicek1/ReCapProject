@@ -8,11 +8,11 @@ using System.Text;
 namespace Business.Abstract
 {
     public interface ICarService
-    {
-        IDataResult<List<CarDetailDto>> GetCarsByBrandName(string brandName);
-        IDataResult<List<CarDetailDto>> GetCarsByColorName(string colorName);
-        IDataResult<List<CarDetailDto>> GetCarsByDailyPrice(decimal min,decimal max);
-        IDataResult<List<CarDetailDto>> GetCarList();
+    { 
+        IDataResult<List<Car>> GetAll();
+        IDataResult<List<Car>> FilteredCarList(int brandId, int colorId);
+        IDataResult<List<Car>> GetCarsByBrandId(int brandId);
+        IDataResult<List<Car>> GetCarsByColorId(int colorId);
         IDataResult<List<CarDetailDto>> GetCarDetailById(int carId);
         IResult Add(Car car);
         IResult Delete(Car car);

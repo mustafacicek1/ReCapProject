@@ -38,13 +38,14 @@ namespace Core.Utilities.Helpers.FileHelper
                 string extension = Path.GetExtension(file.FileName);
                 string guid =GuidHelperTool.CreateGuid();
                 string filePath = guid + extension;
+                string forDatabase = Path.Combine("Uploads\\Images\\", guid) + extension;
 
                 using (FileStream fileStream = File.Create(root + filePath))
                 {
                     file.CopyTo(fileStream);
                     fileStream.Flush();
-                    return filePath;
-                }
+                    return forDatabase;
+                }   
             }
             return null;
         }
