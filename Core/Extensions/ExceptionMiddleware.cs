@@ -47,7 +47,7 @@ namespace Core.Extensions
                 {
                     StatusCode = 400,
                     Message = message,
-                    ValidationErrors = errors
+                    Errors = errors
                 }.ToString());
             }
 

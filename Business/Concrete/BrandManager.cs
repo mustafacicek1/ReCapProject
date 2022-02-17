@@ -55,6 +55,11 @@ namespace Business.Concrete
             return new ErrorDataResult<List<Brand>>(Messages.BrandNotExists);
         }
 
+        public IDataResult<Brand> GetById(int brandId)
+        {
+            return new SuccessDataResult<Brand>(_brandDal.Get(b => b.BrandId == brandId));
+        }
+
         [ValidationAspect(typeof(BrandValidator))]
         public IResult Update(Brand brand)
         {
