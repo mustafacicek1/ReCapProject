@@ -1,11 +1,16 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
+using Core.Extensions;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
 using DataAccess.Abstract;
+using Entities.DTOs;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +21,12 @@ namespace Business.Concrete
     public class UserManager : IUserService
     {
         IUserDal _userDal;
+        IHttpContextAccessor _httpContextAccessor;
 
-        public UserManager(IUserDal userDal)
+        public UserManager(IUserDal userDal,IHttpContextAccessor httpContextAccessor)
         {
             _userDal = userDal;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [ValidationAspect(typeof(UserValidator))]
@@ -35,10 +42,15 @@ namespace Business.Concrete
             return new SuccessResult(Messages.UserDeleted);
         }
 
+        public IDataResult<User> GetById(int userId)
+        {
+            return new SuccessDataResult<User>(_userDal.Get(u => u.Id == userId));
+        }
+
         public IDataResult<User> GetByMail(string email)
         {
             var checkedUser = _userDal.Get(u => u.Email == email);
-            if (checkedUser!=null)
+            if (checkedUser != null)
             {
                 return new SuccessDataResult<User>(checkedUser);
             }
@@ -51,10 +63,24 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(UserValidator))]
-        public IResult Update(User user)
+        [Authentication]
+        public IResult Update(UserForUpdateDto userForUpdateDto)
         {
-            _userDal.Update(user);
-            return new SuccessResult(Messages.UserUpdated);
+            int authUserId = _httpContextAccessor.HttpContext.User.GetAuthenticatedUserId();
+            var user = GetById(authUserId).Data;
+            var verifyPassword = HashingHelper.VerifyPasswordHash(userForUpdateDto.OldPassword, user.PasswordHash, user.PasswordSalt);
+            if (verifyPassword)
+            {
+                byte[] passwordHash, passwordSalt;
+                HashingHelper.CreatePasswordHash(userForUpdateDto.NewPassword, out passwordHash, out passwordSalt);
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+                user.LastName = userForUpdateDto.LastName;
+                user.FirstName = userForUpdateDto.FirstName;
+                _userDal.Update(user);
+                return new SuccessResult(Messages.UserUpdated);
+            }
+            return new ErrorResult(Messages.PasswordError);
         }
     }
 }

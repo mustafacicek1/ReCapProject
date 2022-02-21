@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Core.Entities.Concrete;
+using Entities.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,7 +19,17 @@ namespace WebAPI.Controllers
         public UsersController(IUserService userService)
         {
             _userService = userService;
-        }  
+        }
+        [HttpGet("getbymail")]
+        public IActionResult GetByMail(string mail)
+        {
+            var result = _userService.GetByMail(mail);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
         
         [HttpPost("delete")]
         public IActionResult Delete(User user)
@@ -31,9 +42,9 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpPost("update")]
-        public IActionResult Update(User user)
+        public IActionResult PasswordUpdate(UserForUpdateDto userForUpdateDto)
         {
-            var result = _userService.Update(user);
+            var result = _userService.Update(userForUpdateDto);
             if (result.Success)
             {
                 return Ok(result);

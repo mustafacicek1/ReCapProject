@@ -28,7 +28,8 @@ namespace DataAccess.Conrcrete.EntityFramework
                                  BrandName = b.BrandName,
                                  ModelYear = c.ModelYear,
                                  ColorName = co.ColorName,
-                                 DailyPrice = c.DailyPrice
+                                 DailyPrice = c.DailyPrice,
+                                 Findeks=c.Findeks
                              };
                 return filter == null ? result.ToList()
                     : result.Where(filter).ToList();

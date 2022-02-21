@@ -16,16 +16,18 @@ namespace Business.Concrete
     public class RentalManager : IRentalService
     {
         IRentalDal _rentalDal;
+        ICarService _carService;
 
-        public RentalManager(IRentalDal rentalDal)
+        public RentalManager(IRentalDal rentalDal,ICarService carService)
         {
             _rentalDal = rentalDal;
+            _carService = carService;
         }
 
         [ValidationAspect(typeof(RentalValidator))]
         public IResult Add(Rental rental)
         {
-            IResult result= BusinessRules.Run(CheckIfRentAble(rental.CarId));
+            IResult result= BusinessRules.Run(CheckIfRentAble(rental.CarId),CheckIfFindeksEnough(rental.CustomerId,rental.CarId));
             if (result!=null)
             {
                 return result;
@@ -75,6 +77,27 @@ namespace Business.Concrete
         {
             _rentalDal.Update(rental);
             return new SuccessResult(Messages.RentalUpdated);
+        }
+        private IDataResult<int> GetCustomerFindeks(int customerId)
+        {
+            var customerRentals = GetAllByCustomerId(customerId);
+            int customerFindeks = customerRentals.Data.Count * 275;
+            if (customerFindeks>1900)
+            {
+                customerFindeks = 1900;
+            }
+            return new SuccessDataResult<int>(customerFindeks);
+        }
+
+        private IResult CheckIfFindeksEnough(int customerId,int carId)
+        {
+            int customerFindeks = GetCustomerFindeks(customerId).Data;
+            int carFindeks = _carService.GetCarFindeks(carId).Data;
+            if (customerFindeks>=carFindeks)
+            {
+                return new SuccessResult();
+            }
+            return new ErrorResult(Messages.FindeksNotEnough);
         }
     }
 }

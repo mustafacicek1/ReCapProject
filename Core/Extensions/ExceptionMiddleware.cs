@@ -50,6 +50,17 @@ namespace Core.Extensions
                     Errors = errors
                 }.ToString());
             }
+            if (e.GetType()==typeof(UnauthorizedException))
+            {
+                message = e.Message;
+                httpContext.Response.StatusCode = 401;
+
+                return httpContext.Response.WriteAsync(new ErrorDetails
+                {
+                    StatusCode = httpContext.Response.StatusCode,
+                    Message = message
+                }.ToString());
+            }
 
             return httpContext.Response.WriteAsync(new ErrorDetails
             {

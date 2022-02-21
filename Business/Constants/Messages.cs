@@ -15,6 +15,7 @@ namespace Business.Constants
         public static string CustomerAdded = "Müşteri eklendi";
         public static string CustomerDeleted = "Müşteri silindi";
         public static string CustomerUpdated = "Müşteri güncellendi";
+        public static string CustomerAlreadyExist = "Müşteri zaten kayıtlı";
 
         public static string UserAdded = "Kullanıcı eklendi";
         public static string UsersListed = "Kullanıcılar listelendi";
@@ -49,11 +50,13 @@ namespace Business.Constants
         public static string SuccessfulLogin = "Sisteme giriş başarılı";
         public static string UserAlreadyExists = "Bu kullanıcı zaten mevcut";
         public static string UserRegistered = "Kullanıcı başarıyla kaydedildi";
-        public static string AccessTokenCreated = "Access token başarıyla oluşturuldu";
+        public static string AccessTokenCreated = "Token oluşturuldu";
 
         public static string CreditCardAdded = "Kredi kartı eklendi";
         public static string CardAlreadyExist = "Kredi kartı zaten mevcut";
         public static string CreditCardNotFound = "Kredi kartı bulunamadı";
+
+        public static string FindeksNotEnough = "Findeks puanı yeterli değil";
 
     }
 }

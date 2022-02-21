@@ -1,4 +1,5 @@
-﻿using Business.Concrete;
+﻿using Business.Adapters;
+using Business.Concrete;
 using DataAccess.Conrcrete.EntityFramework;
 using Entities.Concrete;
 using System;
@@ -10,25 +11,25 @@ namespace ConsoleUI
         static void Main(string[] args)
         {
             //RentAddTest();
-            RentalDetailTest();
+            //RentalDetailTest();
             //CarTest();
         }
 
         private static void RentAddTest()
         {
-            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            RentalManager rentalManager = new RentalManager(new EfRentalDal(),new CarManager(new EfCarDal(),new FindeksAdapter()));
             var add = rentalManager.Add(new Rental
             {
-                CarId = 1,
-                CustomerId = 2,
-                RentDate = DateTime.Now,
+                CarId = 3,
+                CustomerId = 1,
+                RentDate = DateTime.Now
             });
             Console.WriteLine(add.Message);
         }
 
         private static void RentalDetailTest()
         {
-            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            RentalManager rentalManager = new RentalManager(new EfRentalDal(), new CarManager(new EfCarDal(), new FindeksAdapter()));
             var result = rentalManager.GetRentalDetails();
             foreach (var rental in result.Data)
             {

@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Adapters;
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
@@ -19,18 +20,21 @@ namespace Business.Concrete
     public class CarManager : ICarService
     {
         ICarDal _carDal;
+        IFindeksService _findeksService;
 
-        public CarManager(ICarDal carDal)
+        public CarManager(ICarDal carDal,IFindeksService findeksService)
         {
             _carDal = carDal;
+            _findeksService = findeksService;
         }
 
-        //[SecuredOperation("car.add,admin")]
+        [SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
         [CacheRemoveAspect("ICarService.GetCarDetailById")]
         [PerformanceAspect(5)]
         public IResult Add(Car car)
         {
+            car.Findeks = _findeksService.CalculateCarFindeks(car);
             _carDal.Add(car);
             return new SuccessResult(Messages.CarAdded);
         }
@@ -86,6 +90,13 @@ namespace Business.Concrete
         public IDataResult<Car> GetById(int carId)
         {
             return new SuccessDataResult<Car>(_carDal.Get(c => c.Id == carId));
+        }
+
+        public IDataResult<int> GetCarFindeks(int carId)
+        {
+            var car = _carDal.Get(c => c.Id == carId);
+            int carFindeks = car.Findeks;
+            return new SuccessDataResult<int>(carFindeks);
         }
     }
 }
