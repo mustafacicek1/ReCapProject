@@ -63,6 +63,7 @@ namespace WebAPI.Controllers
         [HttpPost("add")]
         public IActionResult Add(Rental rental)
         {
+            rental.RentDate = DateTime.Now;
             var result = _rentalService.Add(rental);
             if (result.Success)
             {
